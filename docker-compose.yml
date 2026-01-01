@@ -17,7 +17,7 @@ services:
       - "-c"
       - "wal_level=logical"
     volumes:
-      - ./postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql
 
 
   # MinIO S3-compatible storage
@@ -63,7 +63,7 @@ services:
   # Flink Job Manager with custom image
   jobmanager:
     build:
-      context: .
+      dockerfile: ./images/flink/Dockerfile
       args:
         PAIMON_VERSION: "1.3.1"
         FLINK_VERSION: "1.20"
@@ -110,18 +110,27 @@ services:
     scale: 1
 
   spark-master:
-    image: bitnamilegacy/spark:3.5.0
+    build:
+      dockerfile: ./images/spark/Dockerfile
+      args:
+        PAIMON_VERSION: "1.3.1"
+        SPARK_VERSION: "3.5"
+    image: "spark:v0.1"
     container_name: spark-master
     command: bin/spark-class org.apache.spark.deploy.master.Master
     ports:
       - "9090:8080"
       - "7077:7077"
+      - "4040:4040"
+    networks:
+      lakehouse:
+        ipv4_address: 172.18.0.7
     volumes:
       - ./spark-jobs:/opt/bitnami/spark/jobs
     environment:
       - SPARK_MODE=master
   spark-worker-a:
-    image: bitnamilegacy/spark:3.5.0
+    image: "spark:v0.1"
     container_name: spark-worker-a
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     depends_on:
@@ -131,8 +140,11 @@ services:
       - SPARK_MODE=worker
       - SPARK_WORKER_CORES=1
       - SPARK_WORKER_MEMORY=1g
+    networks:
+      lakehouse:
+        ipv4_address: 172.18.0.8
   spark-worker-b:
-    image: bitnamilegacy/spark:3.5.0
+    image: "spark:v0.1"
     container_name: spark-worker-b
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     depends_on:
@@ -142,9 +154,14 @@ services:
       - SPARK_MODE=worker
       - SPARK_WORKER_CORES=1
       - SPARK_WORKER_MEMORY=1g
+    networks:
+      lakehouse:
+        ipv4_address: 172.18.0.9
 
 volumes:
   minio_data:
+    driver: local
+  postgres_data:
     driver: local
 
 networks:
