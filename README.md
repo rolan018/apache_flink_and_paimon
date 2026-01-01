@@ -1,7 +1,3 @@
-```bash
-docker exec -it spark-master spark-submit --master spark://spark-master:7077 jobs/main.py --packages org.apache.paimon:paimon-spark-3.5:1.3.1
-```
-
 # Apache Flink + Apache Paimon + MinIO Integration + CDC from Postgres
 
 
@@ -133,7 +129,7 @@ INSERT INTO paimon_catalog.flink.user_log
 SELECT * FROM  default_catalog.default_database.user_log;
 ```
 
-## 5 Insert data to postgres and check data in paimon
+## 5. Insert data to postgres and check data in paimon
 ```sql
 insert into flink.user_log("name", "salary", "value", "active") values ('rols', 375.67, 1200, true);
 insert into flink.user_log("name", "salary", "value", "active") values ('frel', 300.67, 1300, true);
@@ -142,7 +138,12 @@ insert into flink.user_log("name", "salary", "value", "active") values ('bbr', 2
 insert into flink.user_log("name", "salary", "value", "active") values ('cccr', 150.67, 900, true);
 ```
 
-## 6 Manage queries in postgres
+## 6. Run spark -- read data from paimon
+```bash
+docker exec -it spark-master spark-submit --master spark://spark-master:7077 jobs/main.py
+```
+
+## 7. Manage queries in postgres
 ```sql
 select * from pg_catalog.pg_replication_slots;
 
