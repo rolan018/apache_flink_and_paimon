@@ -151,7 +151,6 @@ select pg_drop_replication_slot('');
 ```
 ## 📊 What You'll See
 
-- Your INSERT job will appear in the Flink Web UI and complete successfully
 - Data files will be created in MinIO under the `/warehouse/paimon/` path
 - Paimon maintains full ACID properties with snapshots, manifests, and schema evolution support
 
