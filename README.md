@@ -1,7 +1,7 @@
-# Apache Flink + Apache Paimon + MinIO Integration + CDC from Postgres
+# Apache Flink (CDC from Postgres) + Apache Paimon + MinIO Integration + Apache Spark
 
 
-A complete Docker-based setup demonstrating how to use **Apache Flink** to write data to **MinIO** (S3-compatible storage) using **Apache Paimon** as a lakehouse storage format. This project solves the dependency hell that often occurs when trying to integrate these components together.
+A complete Docker-based setup demonstrating how to use **Apache Flink** to write data to **MinIO** (S3-compatible storage) using **Apache Paimon** as a lakehouse storage format and **Apache Spark** to read data from Paimon.
 
 ## 🚀 What's Inside
 
